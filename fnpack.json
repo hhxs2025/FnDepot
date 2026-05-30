@@ -1,0 +1,17 @@
+{
+  "file-collector": {
+    "display_name": "文件收集助手",
+    "desc": "这是一款文件收集工具，可以帮助用户远程收集团队成员文件并汇总保存在本地NAS设备里。支持登录后台以修改后台密码、
+单次提交文件最大数量、单个文件大小-本应用默认网络模式:host,默认占用端口:5664。后台账号：admin;后台密码：admin123",
+    "labels": "工具,文件收集",
+    "version": "1.0.0",
+    "author": "晦华先生",
+    "author_url": "https://github.com/hhxs2025",
+    "bug_report_url": "https://github.com/hhxs2025/FnDepot/issues,
+    "install_type": "存储空间",
+    "size": "47.5",
+    "history": {
+      "1.0.0": "首发版本"
+    }
+  },
+} 

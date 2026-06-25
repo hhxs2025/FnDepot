@@ -26,5 +26,19 @@
     "history": {
       "1.0.0": "首发版本"
     }
+  },
+  "member-points-management": {
+    "display_name": "会员积分管理",
+    "desc": "Member Points Management 是一款轻量级、开箱即用的会员积分管理工具，支持积分查询、积分调整、会员信息管理及批量导入导出等核心功能。",
+    "labels": "工具,生活效率",
+    "version": "1.0.0",
+    "author": "晦华先生",
+    "author_url": "https://github.com/hhxs2025",
+    "bug_report_url": "https://github.com/hhxs2025/member-points-management/issues",
+    "install_type": "存储空间",
+    "size": "1.88",
+    "history": {
+      "1.0.0": "首发版本"
+    }
   }
 } 

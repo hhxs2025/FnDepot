@@ -34,7 +34,7 @@
 ## 📥 下载与安装
 
 ### 下载 fpk 文件
-- 直接下载：https://github.com/hhxs2025/FnDepot/price-system/releases/download/v1.0.0/price-system.fpk
+- 直接下载：https://github.com/hhxs2025/FnDepot/blob/main/price-system/price-system.fpk
 
 ### 安装步骤
 

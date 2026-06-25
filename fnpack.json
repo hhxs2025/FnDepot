@@ -6,7 +6,7 @@
     "version": "1.0.0",
     "author": "晦华先生",
     "author_url": "https://github.com/hhxs2025",
-    "bug_report_url": "https://github.com/EWEDLCM/FntermX/issues",
+    "bug_report_url": "https://github.com/hhxs2025/file-collector/issues",
     "install_type": "存储空间",
     "size": "9.5",
     "history": {
@@ -20,11 +20,11 @@
     "version": "1.0.0",
     "author": "晦华先生",
     "author_url": "https://github.com/hhxs2025",
-    "bug_report_url": "https://github.com/EWEDLCM/FntermX/issues",
+    "bug_report_url": "https://github.com/hhxs2025/price-system/issues",
     "install_type": "存储空间",
     "size": "9.05",
     "history": {
       "1.0.0": "首发版本"
     }
-  },
+  }
 } 

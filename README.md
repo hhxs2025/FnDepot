@@ -10,8 +10,8 @@
 
 | 应用 | 版本 | 状态 | 源码目录 | fpk 下载 |
 |------|------|------|----------|----------|
-| 文件收集助手 | v1.0.0 | ✅ 可用 | [/file-collector](./file-collector) | [下载](https://gitee.com/你的用户名/fnos-fpk/releases/download/v1.0.0/file-collector-1.0.0.fpk) |
-| 物价系统 | v1.0.0 | ✅ 可用 | [/price-system](./price-system) | [下载](https://gitee.com/你的用户名/fnos-fpk/releases/download/v1.0.0/price-system-1.0.0.fpk) |
+| 文件收集助手 | v1.0.0 | ✅ 可用 | [/file-collector](./file-collector) | [下载](https://gitee.com/hhxs2025/FnDepot/releases/download/v1.0.0/file-collector-1.0.0.fpk) |
+| 物价系统 | v1.0.0 | ✅ 可用 | [/price-system](./price-system) | [下载](https://gitee.com/hhxs2025/FnDepot/releases/download/v1.0.0/price-system-1.0.0.fpk) |
 
 ---
 

@@ -56,3 +56,5 @@ Member Points Management 是一款轻量级、开箱即用的会员积分管理�
 - **数据库路径**: `app/server/data/members.db`
   
 ---
+## 📕 地址
+- https://github.com/hhxs2025/FnDepot

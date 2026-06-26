@@ -57,4 +57,4 @@ Member Points Management 是一款轻量级、开箱即用的会员积分管理�
   
 ---
 ## 📕 地址
-- https://github.com/hhxs2025/FnDepot
+- [https://github.com/hhxs2025/FnDepot](https://github.com/hhxs2025/FnDepot/tree/main/member-points-management)

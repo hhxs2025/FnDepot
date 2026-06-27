@@ -1,0 +1,1457 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>☁️ 云比价</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            background: #f0f2f5;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .container { max-width: 1200px; margin: 0 auto; }
+        
+        /* 头部 */
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px 30px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .header-left { display: flex; align-items: center; gap: 15px; flex-wrap: wrap; }
+        .header h1 { font-size: 24px; }
+        .header h1 small { font-size: 14px; opacity: 0.8; font-weight: normal; margin-left: 10px; }
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        .stats {
+            display: flex;
+            gap: 20px;
+            font-size: 13px;
+            flex-wrap: wrap;
+        }
+        .stats span { background: rgba(255,255,255,0.2); padding: 6px 14px; border-radius: 20px; }
+        .stats strong { font-size: 16px; }
+        
+        .header-links {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .header-links a, .header-links .user-info {
+            color: white;
+            background: rgba(255,255,255,0.2);
+            padding: 6px 16px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            cursor: default;
+        }
+        .header-links a:hover {
+            background: rgba(255,255,255,0.35);
+            transform: translateY(-2px);
+        }
+        .header-links a.logout-link:hover {
+            background: rgba(252,129,129,0.4);
+        }
+        
+        /* 标签页导航 */
+        .tabs {
+            display: flex;
+            gap: 5px;
+            background: white;
+            border-radius: 12px 12px 0 0;
+            padding: 10px 10px 0 10px;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+            overflow-x: auto;
+            align-items: center;
+        }
+        .tab-btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 10px 10px 0 0;
+            background: transparent;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 600;
+            color: #718096;
+            transition: all 0.3s;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .tab-btn:hover { background: #f7fafc; color: #4a5568; }
+        .tab-btn.active { background: #667eea; color: white; box-shadow: 0 -4px 15px rgba(102, 126, 234, 0.3); }
+        .tab-btn .badge-tab { background: rgba(255,255,255,0.2); padding: 1px 8px; border-radius: 10px; font-size: 11px; }
+        .tab-btn.active .badge-tab { background: rgba(255,255,255,0.25); }
+        
+        .tab-tutorial {
+            margin-left: auto;
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+            padding: 8px 16px;
+            border-radius: 8px;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 14px;
+        }
+        .tab-tutorial:hover {
+            background: #f7fafc;
+            transform: translateY(-1px);
+        }
+        
+        /* 标签页内容 */
+        .tab-content {
+            background: white;
+            border-radius: 0 0 12px 12px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            min-height: 400px;
+        }
+        .tab-pane { display: none; animation: fadeIn 0.3s ease; }
+        .tab-pane.active { display: block; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .tab-pane h3 {
+            color: #2d3748;
+            margin-bottom: 18px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .tab-pane h3 .subtitle {
+            font-size: 14px;
+            font-weight: normal;
+            color: #718096;
+            margin-left: 10px;
+        }
+        .tab-pane h3 .header-actions {
+            margin-left: auto;
+            display: flex;
+            gap: 10px;
+        }
+        
+        /* 表单 */
+        .form-group {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        .form-group input, .form-group select {
+            padding: 10px 14px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            flex: 1;
+            min-width: 140px;
+            transition: border-color 0.2s;
+        }
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.15);
+        }
+        .form-group input::placeholder { color: #a0aec0; }
+        
+        .btn {
+            padding: 10px 22px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            white-space: nowrap;
+        }
+        .btn:active { transform: scale(0.97); }
+        .btn-primary { background: #667eea; color: white; }
+        .btn-primary:hover { background: #5a67d8; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(102,126,234,0.4); }
+        .btn-success { background: #48bb78; color: white; }
+        .btn-success:hover { background: #38a169; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(72,187,120,0.4); }
+        .btn-danger { background: #fc8181; color: white; }
+        .btn-danger:hover { background: #f56565; transform: translateY(-1px); }
+        .btn-warning { background: #ecc94b; color: #2d3748; }
+        .btn-warning:hover { background: #d69e2e; transform: translateY(-1px); }
+        .btn-info { background: #4299e1; color: white; }
+        .btn-info:hover { background: #3182ce; transform: translateY(-1px); }
+        .btn-outline { background: transparent; color: #667eea; border: 2px solid #667eea; }
+        .btn-outline:hover { background: #667eea; color: white; }
+        .btn-sm { padding: 5px 12px; font-size: 12px; }
+        .btn-group { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+        
+        /* 备份列表样式 */
+        .backup-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 14px;
+            background: #f7fafc;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            border: 1px solid #e2e8f0;
+        }
+        .backup-item .info {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            font-size: 14px;
+            color: #2d3748;
+        }
+        .backup-item .info .size { color: #718096; font-size: 13px; }
+        .backup-item .info .time { color: #718096; font-size: 13px; }
+        
+        /* 表格 */
+        .table-wrapper { overflow-x: auto; margin-top: 10px; }
+        table { width: 100%; border-collapse: collapse; font-size: 14px; }
+        th, td { padding: 10px 14px; text-align: left; border-bottom: 1px solid #e2e8f0; }
+        th { background: #f7fafc; font-weight: 600; color: #2d3748; position: sticky; top: 0; }
+        tr:hover { background: #f7fafc; }
+        
+        .badge {
+            display: inline-block;
+            padding: 3px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .badge-success { background: #c6f6d5; color: #22543d; }
+        .badge-danger { background: #fed7d7; color: #9b2c2c; }
+        .badge-warning { background: #fefcbf; color: #744210; }
+        .badge-info { background: #bee3f8; color: #2a4365; }
+        .badge-primary { background: #c3dafe; color: #2a4365; }
+        
+        .price-highlight { font-size: 17px; font-weight: bold; color: #2d3748; }
+        
+        .alert {
+            padding: 12px 18px;
+            border-radius: 8px;
+            margin: 10px 0;
+        }
+        .alert-success { background: #c6f6d5; color: #22543d; border-left: 4px solid #38a169; }
+        .alert-danger { background: #fed7d7; color: #9b2c2c; border-left: 4px solid #e53e3e; }
+        .alert-info { background: #bee3f8; color: #2a4365; border-left: 4px solid #3182ce; }
+        .alert-warning { background: #fefcbf; color: #744210; border-left: 4px solid #d69e2e; }
+        
+        .flex { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+        .mt-10 { margin-top: 10px; }
+        .mt-15 { margin-top: 15px; }
+        .mb-10 { margin-bottom: 10px; }
+        .hidden { display: none !important; }
+        
+        .compare-result-card {
+            background: #f8fafc;
+            border-radius: 10px;
+            padding: 18px;
+            margin-top: 12px;
+            border: 1px solid #e2e8f0;
+        }
+        .compare-result-card .header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 12px;
+        }
+        .compare-result-card .stat-row {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            padding: 12px 15px;
+            background: white;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            font-size: 13px;
+        }
+        .compare-result-card .stat-row span { display: flex; align-items: center; gap: 5px; }
+        .compare-result-card .conclusion {
+            margin-top: 12px;
+            padding: 12px 16px;
+            background: #d4edda;
+            border-radius: 6px;
+            color: #155724;
+            font-size: 14px;
+        }
+        .compare-result-card .conclusion strong { color: #0b5e1e; }
+        
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        .modal-overlay.hidden { display: none; }
+        .modal-box {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        .modal-box h3 { margin-bottom: 15px; }
+        .modal-box .form-group { margin-bottom: 15px; }
+        .modal-box .form-group label { font-weight: 600; min-width: 80px; }
+        .modal-box .btn-group { margin-top: 20px; justify-content: flex-end; }
+        
+        /* 底部开发者信息 */
+        .footer {
+            margin-top: 30px;
+            padding: 20px 30px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+            text-align: center;
+            color: #718096;
+            font-size: 14px;
+            border-top: 3px solid #667eea;
+        }
+        .footer .dev-name {
+            font-weight: 700;
+            color: #667eea;
+            font-size: 16px;
+        }
+        .footer .dev-email {
+            color: #4299e1;
+            text-decoration: none;
+        }
+        .footer .dev-email:hover {
+            text-decoration: underline;
+        }
+        .footer .heart {
+            color: #fc8181;
+        }
+        
+        .mode-hint {
+            font-size: 13px;
+            color: #718096;
+            margin-bottom: 10px;
+            padding: 8px 14px;
+            background: #f7fafc;
+            border-radius: 6px;
+            border-left: 3px solid #667eea;
+        }
+        
+        @media (max-width: 768px) {
+            .header { flex-direction: column; text-align: center; gap: 10px; }
+            .header-left { justify-content: center; }
+            .header-right { justify-content: center; width: 100%; }
+            .stats { justify-content: center; }
+            .tab-btn { padding: 10px 16px; font-size: 13px; }
+            .tab-content { padding: 15px; }
+            .form-group input, .form-group select { min-width: 100px; }
+            .tab-pane h3 .header-actions { margin-left: 0; width: 100%; }
+            .header-links { justify-content: center; }
+            .backup-item { flex-direction: column; gap: 8px; align-items: stretch; }
+            .backup-item .info { gap: 8px; }
+        }
+        @media (max-width: 480px) {
+            .tab-btn { font-size: 12px; padding: 8px 12px; }
+            .btn { padding: 8px 14px; font-size: 12px; }
+            th, td { padding: 6px 8px; font-size: 12px; }
+            .footer { font-size: 12px; padding: 15px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 头部 -->
+        <div class="header">
+            <div class="header-left">
+                <h1>☁️ 云比价 <small>智能比价-省钱助手</small></h1>
+            </div>
+            <div class="header-right">
+                <div class="stats" id="stats">
+                    <span>📦 商品: <strong id="statProducts">0</strong></span>
+                    <span>📝 记录: <strong id="statPrices">0</strong></span>
+                    <span>📈 本周: <strong id="statWeek">0</strong></span>
+                    <span>🏪 店铺: <strong id="statStores">0</strong></span>
+                </div>
+                <div class="header-links">
+                    <span class="user-info" id="userInfo" style="display:none;">👤 <span id="usernameDisplay"></span></span>
+                    <a href="javascript:showChangePassword()" id="changePwdBtn" style="display:none;color:white;background:rgba(255,255,255,0.2);padding:6px 16px;border-radius:20px;text-decoration:none;font-size:14px;font-weight:600;">🔑 修改密码</a>
+                    <a href="/jiaocheng.html" target="_blank">📖 教程</a>
+                    <a href="javascript:doLogout()" class="logout-link" id="logoutBtn" style="display:none;">🚪 退出</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- 标签页导航 -->
+        <div class="tabs" id="tabNav">
+            <button class="tab-btn active" data-tab="tab-home">🏠 首页</button>
+            <button class="tab-btn" data-tab="tab-products">📦 商品管理</button>
+            <button class="tab-btn" data-tab="tab-prices">💰 价格记录</button>
+            <button class="tab-btn" data-tab="tab-compare">⚖️ 智能比价</button>
+            <button class="tab-btn" data-tab="tab-query">🔍 一键查价</button>
+            <button class="tab-btn" data-tab="tab-backup">💾 数据管理</button>
+            <a href="/jiaocheng.html" target="_blank" class="tab-tutorial">📖 教程</a>
+        </div>
+
+        <!-- 标签页内容 -->
+        <div class="tab-content">
+
+            <!-- ========== 首页 ========== -->
+            <div class="tab-pane active" id="tab-home">
+                <h3>📊 数据概览</h3>
+                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:15px;margin-bottom:20px;">
+                    <div style="background:#f7fafc;padding:20px;border-radius:10px;text-align:center;">
+                        <div style="font-size:32px;">📦</div>
+                        <div style="font-size:24px;font-weight:bold;color:#667eea;" id="homeProducts">0</div>
+                        <div style="color:#718096;">商品总数</div>
+                    </div>
+                    <div style="background:#f7fafc;padding:20px;border-radius:10px;text-align:center;">
+                        <div style="font-size:32px;">💰</div>
+                        <div style="font-size:24px;font-weight:bold;color:#48bb78;" id="homePrices">0</div>
+                        <div style="color:#718096;">价格记录</div>
+                    </div>
+                    <div style="background:#f7fafc;padding:20px;border-radius:10px;text-align:center;">
+                        <div style="font-size:32px;">📈</div>
+                        <div style="font-size:24px;font-weight:bold;color:#ecc94b;" id="homeWeek">0</div>
+                        <div style="color:#718096;">本周新增</div>
+                    </div>
+                    <div style="background:#f7fafc;padding:20px;border-radius:10px;text-align:center;">
+                        <div style="font-size:32px;">🏪</div>
+                        <div style="font-size:24px;font-weight:bold;color:#4299e1;" id="homeStores">0</div>
+                        <div style="color:#718096;">涉及店铺</div>
+                    </div>
+                </div>
+                <div style="background:#f7fafc;padding:20px;border-radius:10px;">
+                    <h4 style="margin-bottom:10px;">💡 快速开始</h4>
+                    <div class="flex">
+                        <button class="btn btn-primary" onclick="switchTab('tab-products')">➕ 添加商品</button>
+                        <button class="btn btn-success" onclick="switchTab('tab-prices')">💰 记录价格</button>
+                        <button class="btn btn-info" onclick="switchTab('tab-compare')">⚖️ 智能比价</button>
+                        <a href="/jiaocheng.html" target="_blank" class="btn btn-outline">📖 查看教程</a>
+                    </div>
+                </div>
+                <div id="recentPrices" class="mt-15"></div>
+            </div>
+
+            <!-- ========== 商品管理 ========== -->
+            <div class="tab-pane" id="tab-products">
+                <h3>
+                    📦 商品管理
+                    <span class="subtitle">添加、编辑、删除商品</span>
+                    <span class="header-actions">
+                        <button class="btn btn-danger btn-sm" onclick="clearAllProducts()">🗑️ 清空全部</button>
+                    </span>
+                </h3>
+                <div class="form-group">
+                    <input type="text" id="productName" placeholder="商品名称" style="flex:2;">
+                    <input type="text" id="productCategory" placeholder="分类（如：蔬菜、饮料）">
+                    <input type="text" id="productUnit" placeholder="单位" value="个" style="flex:0.5;">
+                    <button class="btn btn-primary" onclick="addProduct()">➕ 添加</button>
+                </div>
+                <div id="productList" class="mt-10"></div>
+            </div>
+
+            <!-- ========== 价格记录 ========== -->
+            <div class="tab-pane" id="tab-prices">
+                <h3>💰 价格记录 <span class="subtitle">记录商品在各店铺的价格</span></h3>
+                <div class="form-group">
+                    <select id="priceProduct" style="flex:1.5;">
+                        <option value="">选择商品</option>
+                    </select>
+                    <input type="number" id="priceValue" placeholder="价格" step="0.01" style="flex:1;">
+                    <input type="text" id="priceStore" placeholder="店铺名称" style="flex:1;">
+                </div>
+                <div class="form-group">
+                    <input type="text" id="priceLocation" placeholder="地点（如：XX超市）" style="flex:1;">
+                    <input type="text" id="priceNote" placeholder="备注（如：促销价）" style="flex:1;">
+                    <button class="btn btn-success" onclick="addPrice()">💾 记录</button>
+                </div>
+                <div class="mt-15">
+                    <h4 style="margin-bottom:10px;font-size:15px;color:#4a5568;">📋 最近记录</h4>
+                    <div id="priceResult"></div>
+                </div>
+            </div>
+
+            <!-- ========== 智能比价 ========== -->
+            <div class="tab-pane" id="tab-compare">
+                <h3>⚖️ 智能比价 <span class="subtitle">两种模式，帮您找到最划算的选择</span></h3>
+                <div class="btn-group">
+                    <button class="btn btn-primary" onclick="switchCompareMode('same_product')" id="mode_same_product">🏪 同物异店比价</button>
+                    <button class="btn btn-outline" onclick="switchCompareMode('alternative')" id="mode_alternative">🔄 替代品比价</button>
+                </div>
+
+                <!-- 同物异店比价：选一个商品，比所有店铺 -->
+                <div id="sameProductMode">
+                    <div class="form-group">
+                        <select id="sameProductSelect" style="flex:2;">
+                            <option value="">👇 请选择要比价的商品</option>
+                        </select>
+                        <button class="btn btn-success" onclick="compareSameProduct()">🔍 比价</button>
+                    </div>
+                    <div class="mode-hint">
+                        💡 选择一个商品，系统将自动对比该商品在<strong>所有店铺</strong>的价格，帮您决定去哪家买最划算
+                    </div>
+                    <div id="sameProductResult"></div>
+                </div>
+
+                <!-- 替代品比价：输入商品名，找同类更便宜的 -->
+                <div id="alternativeMode" class="hidden">
+                    <div class="form-group">
+                        <input type="text" id="alternativeSearch" placeholder="输入商品名称，查找替代品" style="flex:2;">
+                        <button class="btn btn-success" onclick="compareAlternative()">🔍 找替代品</button>
+                    </div>
+                    <div class="mode-hint">
+                        💡 输入一个商品，系统将找出<strong>同分类</strong>中价格更低的替代品
+                    </div>
+                    <div id="alternativeResult"></div>
+                </div>
+            </div>
+
+            <!-- ========== 一键查价 ========== -->
+            <div class="tab-pane" id="tab-query">
+                <h3>🔍 一键查价 <span class="subtitle">按条件筛选价格记录</span></h3>
+                <div class="form-group">
+                    <select id="queryProduct">
+                        <option value="">全部商品</option>
+                    </select>
+                    <input type="text" id="queryStore" placeholder="店铺名称">
+                    <input type="number" id="queryDays" placeholder="天数" value="30" style="width:100px;">
+                    <button class="btn btn-primary" onclick="queryPrices()">🔍 一键查价</button>
+                    <button class="btn btn-outline" onclick="clearQuery()">清空</button>
+                </div>
+                <div id="queryResult" class="mt-10"></div>
+            </div>
+
+            <!-- ========== 数据管理 ========== -->
+            <div class="tab-pane" id="tab-backup">
+                <h3>
+                    💾 数据管理
+                    <span class="subtitle">备份与恢复您的数据</span>
+                </h3>
+                <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:18px;">
+                    <button class="btn btn-success" onclick="doBackup()">📤 创建备份</button>
+                    <button class="btn btn-warning" onclick="refreshBackupList()">🔄 刷新列表</button>
+                </div>
+                <div id="backupStatus" style="display:none;" class="alert"></div>
+                <div id="backupList">
+                    <div class="alert alert-info">点击「创建备份」开始备份数据</div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- ========== 底部开发者信息 ========== -->
+        <div class="footer">
+            <div>
+                <span>❤️ 开发者：</span>
+                <span class="dev-name">晦华先生</span>
+                <span style="margin:0 10px;">|</span>
+                <span>📧 联系：</span>
+                <a href="mailto:2303537063@qq.com" class="dev-email">2303537063@qq.com</a>
+                <span style="margin:0 10px;">|</span>
+                <span class="heart">💜</span>
+                <span style="color:#a0aec0;font-size:13px;margin-left:10px;">
+                    云比价 v1.0.1 &nbsp;·&nbsp; 购物省心又省钱 🎉
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== 编辑商品弹窗 ========== -->
+    <div class="modal-overlay hidden" id="editProductModal">
+        <div class="modal-box">
+            <h3>✏️ 编辑商品</h3>
+            <div class="form-group">
+                <label>名称</label>
+                <input type="text" id="editProductName" placeholder="商品名称">
+            </div>
+            <div class="form-group">
+                <label>分类</label>
+                <input type="text" id="editProductCategory" placeholder="分类">
+            </div>
+            <div class="form-group">
+                <label>单位</label>
+                <input type="text" id="editProductUnit" placeholder="单位">
+            </div>
+            <div class="btn-group">
+                <button class="btn btn-outline" onclick="closeEditModal()">取消</button>
+                <button class="btn btn-primary" onclick="saveEditProduct()">💾 保存</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== 修改密码弹窗 ========== -->
+    <div class="modal-overlay hidden" id="changePwdModal">
+        <div class="modal-box">
+            <h3>🔑 修改密码</h3>
+            <div class="form-group">
+                <label>原密码</label>
+                <input type="password" id="oldPassword" placeholder="请输入当前密码">
+            </div>
+            <div class="form-group">
+                <label>新密码</label>
+                <input type="password" id="newPassword" placeholder="请输入新密码（至少6位）">
+            </div>
+            <div class="form-group">
+                <label>确认密码</label>
+                <input type="password" id="confirmPassword" placeholder="请再次输入新密码">
+            </div>
+            <div id="changePwdError" style="color:#e53e3e;font-size:13px;text-align:center;display:none;"></div>
+            <div class="btn-group">
+                <button class="btn btn-outline" onclick="closeChangePwdModal()">取消</button>
+                <button class="btn btn-primary" onclick="doChangePassword()">💾 确认修改</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ============ 工具函数 ============
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes < 1024) return bytes + ' B';
+            if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+            return (bytes / 1048576).toFixed(1) + ' MB';
+        }
+
+        // ============ 状态变量 ============
+        let editingProductId = null;
+        let isLoggedIn = false;
+
+        // ============ 检查登录状态 ============
+        async function checkAuth() {
+            try {
+                const res = await fetch('/api/check-auth');
+                const data = await res.json();
+                if (data.logged_in) {
+                    isLoggedIn = true;
+                    document.getElementById('userInfo').style.display = 'inline-flex';
+                    document.getElementById('usernameDisplay').textContent = data.username;
+                    document.getElementById('logoutBtn').style.display = 'inline-flex';
+                    document.getElementById('changePwdBtn').style.display = 'inline-flex';
+                } else {
+                    isLoggedIn = false;
+                    document.getElementById('userInfo').style.display = 'none';
+                    document.getElementById('logoutBtn').style.display = 'none';
+                    document.getElementById('changePwdBtn').style.display = 'none';
+                    window.location.href = '/login';
+                }
+            } catch (e) {
+                console.log('检查登录状态失败:', e);
+            }
+        }
+
+        // ============ 退出登录 ============
+        async function doLogout() {
+            if (!confirm('确定要退出登录吗？')) return;
+            try {
+                await fetch('/api/logout', { method: 'POST' });
+                window.location.href = '/login';
+            } catch (e) {
+                alert('退出失败，请重试');
+            }
+        }
+
+        // ============ 标签页切换 ============
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.tab === tabId);
+            });
+            document.querySelectorAll('.tab-pane').forEach(pane => {
+                pane.classList.toggle('active', pane.id === tabId);
+            });
+            if (tabId === 'tab-compare') {
+                loadProductSelects();
+            }
+            if (tabId === 'tab-backup') {
+                refreshBackupList();
+            }
+        }
+
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                switchTab(this.dataset.tab);
+            });
+        });
+
+        // ============ 比价模式切换 ============
+        function switchCompareMode(mode) {
+            document.querySelectorAll('#tab-compare .btn-group .btn').forEach(btn => {
+                btn.className = 'btn btn-outline';
+            });
+            document.getElementById(`mode_${mode}`).className = 'btn btn-primary';
+            document.getElementById('sameProductMode').className = mode === 'same_product' ? '' : 'hidden';
+            document.getElementById('alternativeMode').className = mode === 'alternative' ? '' : 'hidden';
+        }
+
+        // ============ API 调用 ============
+        async function api(url, options = {}) {
+            const res = await fetch(url, {
+                headers: { 'Content-Type': 'application/json' },
+                ...options
+            });
+            
+            if (res.status === 401 || res.status === 403) {
+                alert('⚠️ 登录已过期，请重新登录');
+                window.location.href = '/login';
+                throw new Error('未授权');
+            }
+            
+            const contentType = res.headers.get('content-type');
+            if (!contentType || !contentType.includes('application/json')) {
+                alert('⚠️ 请重新登录');
+                window.location.href = '/login';
+                throw new Error('返回非JSON响应');
+            }
+            
+            return res.json();
+        }
+
+        // ============ 加载商品列表（用于下拉框） ============
+        async function loadProductSelects() {
+            try {
+                const data = await api('/api/products');
+                const selects = ['priceProduct', 'queryProduct', 'sameProductSelect'];
+                selects.forEach(id => {
+                    const sel = document.getElementById(id);
+                    if (!sel) return;
+                    const currentVal = sel.value;
+                    sel.innerHTML = '<option value="">选择商品</option>';
+                    if (data && data.length > 0) {
+                        data.forEach(p => {
+                            sel.innerHTML += `<option value="${p.id}">${escapeHtml(p.name)} (${escapeHtml(p.category || '未分类')})</option>`;
+                        });
+                    } else {
+                        sel.innerHTML = '<option value="">暂无商品，请先添加</option>';
+                    }
+                    if (currentVal && data && data.some(p => p.id == currentVal)) {
+                        sel.value = currentVal;
+                    }
+                });
+            } catch (error) {
+                console.error('加载商品下拉列表失败:', error);
+            }
+        }
+
+        // ============ 加载商品列表（表格） ============
+        async function loadProducts() {
+            try {
+                const data = await api('/api/products');
+                const list = document.getElementById('productList');
+                
+                if (!data || data.length === 0) {
+                    list.innerHTML = '<div class="alert alert-info">📭 暂无商品，请点击「添加」按钮创建</div>';
+                    document.getElementById('homeProducts').textContent = '0';
+                    return;
+                }
+                
+                list.innerHTML = `
+                    <div class="table-wrapper">
+                        <table>
+                            <thead><tr>
+                                <th>名称</th>
+                                <th>分类</th>
+                                <th>单位</th>
+                                <th>价格记录数</th>
+                                <th>操作</th>
+                            </tr></thead>
+                            <tbody>
+                                ${data.map(p => `
+                                    <tr>
+                                        <td><strong>${escapeHtml(p.name)}</strong></td>
+                                        <td><span class="badge badge-info">${escapeHtml(p.category || '未分类')}</span></td>
+                                        <td>${escapeHtml(p.unit || '个')}</td>
+                                        <td><span class="badge badge-primary">${p.price_count || 0}</span></td>
+                                        <td>
+                                            <button class="btn btn-warning btn-sm" onclick="openEditModal(${p.id})">✏️</button>
+                                            <button class="btn btn-danger btn-sm" onclick="deleteProduct(${p.id}, '${escapeHtml(p.name)}')">🗑️</button>
+                                        </td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div style="margin-top:10px;color:#666;font-size:13px;">
+                        共 ${data.length} 个商品
+                    </div>
+                `;
+                
+                document.getElementById('homeProducts').textContent = data.length;
+                await updateStoreCount();
+            } catch (error) {
+                console.error('加载商品列表失败:', error);
+                document.getElementById('productList').innerHTML = '<div class="alert alert-danger">❌ 加载商品列表失败，请刷新页面</div>';
+            }
+        }
+
+        // ============ 更新店铺数 ============
+        async function updateStoreCount() {
+            try {
+                const data = await api('/api/stats');
+                document.getElementById('homeStores').textContent = data.total_stores || 0;
+                document.getElementById('statStores').textContent = data.total_stores || 0;
+            } catch(e) {}
+        }
+
+        // ============ 加载统计 ============
+        async function loadStats() {
+            try {
+                const data = await api('/api/stats');
+                document.getElementById('statProducts').textContent = data.total_products || 0;
+                document.getElementById('statPrices').textContent = data.total_prices || 0;
+                document.getElementById('statWeek').textContent = data.week_prices || 0;
+                document.getElementById('homePrices').textContent = data.total_prices || 0;
+                document.getElementById('homeWeek').textContent = data.week_prices || 0;
+                document.getElementById('statStores').textContent = data.total_stores || 0;
+            } catch(e) {
+                console.error('加载统计失败:', e);
+            }
+        }
+
+        // ============ 添加商品 ============
+        async function addProduct() {
+            const name = document.getElementById('productName').value.trim();
+            const category = document.getElementById('productCategory').value.trim();
+            const unit = document.getElementById('productUnit').value.trim() || '个';
+            
+            if (!name) { alert('请输入商品名称'); return; }
+            
+            await api('/api/product', {
+                method: 'POST',
+                body: JSON.stringify({ name, category, unit })
+            });
+            
+            document.getElementById('productName').value = '';
+            document.getElementById('productCategory').value = '';
+            await loadProducts();
+            await loadStats();
+            await loadProductSelects();
+            alert('✅ 商品添加成功！');
+        }
+
+        // ============ 编辑商品（弹窗） ============
+        function openEditModal(productId) {
+            editingProductId = productId;
+            fetch('/api/products')
+                .then(res => res.json())
+                .then(products => {
+                    const p = products.find(item => item.id === productId);
+                    if (p) {
+                        document.getElementById('editProductName').value = p.name;
+                        document.getElementById('editProductCategory').value = p.category || '';
+                        document.getElementById('editProductUnit').value = p.unit || '个';
+                        document.getElementById('editProductModal').classList.remove('hidden');
+                    }
+                });
+        }
+
+        function closeEditModal() {
+            document.getElementById('editProductModal').classList.add('hidden');
+            editingProductId = null;
+        }
+
+        async function saveEditProduct() {
+            if (!editingProductId) return;
+            
+            const name = document.getElementById('editProductName').value.trim();
+            const category = document.getElementById('editProductCategory').value.trim();
+            const unit = document.getElementById('editProductUnit').value.trim() || '个';
+            
+            if (!name) { alert('请输入商品名称'); return; }
+            
+            await api(`/api/product/${editingProductId}`, {
+                method: 'PUT',
+                body: JSON.stringify({ name, category, unit })
+            });
+            
+            closeEditModal();
+            loadProducts();
+            loadProductSelects();
+            alert('✅ 商品更新成功！');
+        }
+
+        document.getElementById('editProductModal').addEventListener('click', function(e) {
+            if (e.target === this) closeEditModal();
+        });
+
+        // ============ 删除商品 ============
+        async function deleteProduct(productId, productName) {
+            if (!confirm(`确定要删除商品「${productName}」吗？\n\n⚠️ 该商品的所有价格记录也会被一起删除！`)) return;
+            if (!confirm(`再次确认：真的要删除「${productName}」及其所有价格数据吗？此操作不可恢复！`)) return;
+            
+            try {
+                const result = await api(`/api/product/${productId}`, { method: 'DELETE' });
+                if (result.message) {
+                    alert(`✅ ${result.message}`);
+                    await loadProducts();
+                    await loadStats();
+                    await loadRecentPrices();
+                    await loadProductSelects();
+                }
+            } catch (error) {
+                alert('❌ 删除失败：' + error.message);
+            }
+        }
+
+        // ============ 清空所有商品 ============
+        async function clearAllProducts() {
+            if (!confirm('⚠️ 确定要清空所有商品吗？\n\n这将删除所有商品及其关联的所有价格记录！\n此操作不可恢复！')) return;
+            if (!confirm('再次确认：真的要清空所有数据吗？')) return;
+            
+            try {
+                const result = await api('/api/products/clear', { method: 'DELETE' });
+                if (result.message) {
+                    alert(`✅ ${result.message}`);
+                    await loadProducts();
+                    await loadStats();
+                    await loadRecentPrices();
+                    await loadProductSelects();
+                    document.getElementById('queryResult').innerHTML = '<div class="alert alert-info">数据已清空</div>';
+                }
+            } catch (error) {
+                alert('❌ 清空失败：' + error.message);
+            }
+        }
+
+        // ============ 记录价格 ============
+        async function addPrice() {
+            const product_id = document.getElementById('priceProduct').value;
+            const price = document.getElementById('priceValue').value;
+            const store = document.getElementById('priceStore').value.trim();
+            const location = document.getElementById('priceLocation').value.trim();
+            const note = document.getElementById('priceNote').value.trim();
+            
+            if (!product_id) { alert('请选择商品'); return; }
+            if (!price || parseFloat(price) <= 0) { alert('请输入有效价格'); return; }
+            if (!store) { alert('请输入店铺名称'); return; }
+            
+            await api('/api/price', {
+                method: 'POST',
+                body: JSON.stringify({ product_id, price: parseFloat(price), store, location, note })
+            });
+            
+            document.getElementById('priceValue').value = '';
+            document.getElementById('priceStore').value = '';
+            document.getElementById('priceLocation').value = '';
+            document.getElementById('priceNote').value = '';
+            await loadStats();
+            await loadRecentPrices();
+            alert('✅ 价格记录成功！');
+        }
+
+        // ============ 一键查价 ============
+        async function queryPrices() {
+            const product_id = document.getElementById('queryProduct').value;
+            const store = document.getElementById('queryStore').value.trim();
+            const days = document.getElementById('queryDays').value || 30;
+            
+            let url = `/api/prices?days=${days}&limit=200`;
+            if (product_id) url += `&product_id=${product_id}`;
+            if (store) url += `&store=${encodeURIComponent(store)}`;
+            
+            const data = await api(url);
+            renderPriceTable(data, 'queryResult');
+        }
+
+        function clearQuery() {
+            document.getElementById('queryProduct').value = '';
+            document.getElementById('queryStore').value = '';
+            document.getElementById('queryDays').value = '30';
+            queryPrices();
+        }
+
+        async function loadRecentPrices() {
+            try {
+                const data = await api('/api/prices?days=7&limit=20');
+                renderPriceTable(data, 'priceResult');
+                renderPriceTable(data.slice(0, 5), 'recentPrices', true);
+            } catch (error) {
+                console.error('加载最近价格失败:', error);
+            }
+        }
+
+        function renderPriceTable(data, containerId, compact = false) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+            
+            if (!data || data.length === 0) {
+                container.innerHTML = '<div class="alert alert-info">暂无价格记录</div>';
+                return;
+            }
+            
+            container.innerHTML = `
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>商品</th>
+                                <th>价格</th>
+                                <th>店铺</th>
+                                ${!compact ? '<th>地点</th>' : ''}
+                                <th>时间</th>
+                                ${!compact ? '<th>操作</th>' : ''}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${data.map(p => `
+                                <tr>
+                                    <td><strong>${escapeHtml(p.product_name)}</strong></td>
+                                    <td><span class="price-highlight">¥${p.price}</span></td>
+                                    <td>${escapeHtml(p.store || '-')}</td>
+                                    ${!compact ? `<td>${escapeHtml(p.location || '-')}</td>` : ''}
+                                    <td style="font-size:12px;color:#666;">${p.record_time}</td>
+                                    ${!compact ? `
+                                        <td>
+                                            <button class="btn btn-warning btn-sm" onclick="updatePrice(${p.id})">✏️</button>
+                                            <button class="btn btn-danger btn-sm" onclick="deletePrice(${p.id})">🗑️</button>
+                                        </td>
+                                    ` : ''}
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+                ${!compact ? `<div style="margin-top:10px;color:#666;font-size:13px;">共 ${data.length} 条记录</div>` : ''}
+            `;
+        }
+
+        // ============ 同物异店比价 ============
+        async function compareSameProduct() {
+            const selectVal = document.getElementById('sameProductSelect').value;
+            
+            if (!selectVal) {
+                alert('请先选择一个商品');
+                return;
+            }
+            
+            const url = `/api/compare/same-product?product_id=${selectVal}`;
+            const data = await api(url);
+            
+            const resultDiv = document.getElementById('sameProductResult');
+            if (data.error) {
+                resultDiv.innerHTML = `<div class="alert alert-danger">${data.error}</div>`;
+                return;
+            }
+            
+            let storesHtml = data.stores.map((store, i) => `
+                <tr ${i === 0 ? 'style="background:#d4edda;"' : ''}>
+                    <td>${i+1} ${i === 0 ? '🏆' : ''}</td>
+                    <td><strong>${escapeHtml(store.store)}</strong></td>
+                    <td><span style="font-weight:bold;color:${i === 0 ? '#28a745' : '#333'};font-size:16px;">¥${store.price}</span></td>
+                    <td>${escapeHtml(store.location)}</td>
+                    <td><span class="badge ${i === 0 ? 'badge-success' : 'badge-info'}">${data.statistics.savings[i]?.save_percent || 0}%</span></td>
+                    <td style="font-size:12px;color:#666;">${store.time}</td>
+                </tr>
+            `).join('');
+            
+            resultDiv.innerHTML = `
+                <div class="compare-result-card">
+                    <div class="header-row">
+                        <div>
+                            <h4>${escapeHtml(data.product.name)}</h4>
+                            <span class="badge badge-info">${escapeHtml(data.product.category || '未分类')}</span>
+                            <span class="badge badge-warning">${escapeHtml(data.product.unit || '个')}</span>
+                        </div>
+                        <div style="text-align:right;">
+                            <span style="font-size:20px;color:#28a745;">🏆 推荐：${escapeHtml(data.recommendation.best_store)}</span>
+                            <span style="font-size:20px;font-weight:bold;color:#dc3545;margin-left:10px;">¥${data.recommendation.best_price}</span>
+                        </div>
+                    </div>
+                    <div class="stat-row">
+                        <span>📊 价格区间：¥${data.statistics.price_range.min} - ¥${data.statistics.price_range.max}</span>
+                        <span>📈 均价：¥${data.statistics.price_range.avg}</span>
+                        <span>💰 差价：¥${data.statistics.price_range.diff}</span>
+                        <span>🏪 ${data.statistics.total_stores} 家店铺</span>
+                    </div>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead><tr>
+                                <th>排名</th>
+                                <th>店铺</th>
+                                <th>价格</th>
+                                <th>位置</th>
+                                <th>比均价低</th>
+                                <th>更新时间</th>
+                            </tr></thead>
+                            <tbody>${storesHtml}</tbody>
+                        </table>
+                    </div>
+                    <div class="conclusion">
+                        💡 <strong>结论：</strong>「${escapeHtml(data.product.name)}」在 <strong>${escapeHtml(data.recommendation.best_store)}</strong> 最便宜，
+                        仅需 <strong>¥${data.recommendation.best_price}</strong>，
+                        比最贵的店铺便宜 <strong>¥${data.statistics.price_range.diff}</strong>
+                        ${data.statistics.total_stores > 1 ? `，比均价低 ${data.statistics.savings[0]?.save_percent || 0}%` : ''}
+                    </div>
+                </div>
+            `;
+        }
+
+        // ============ 替代品比价 ============
+        async function compareAlternative() {
+            const searchText = document.getElementById('alternativeSearch').value.trim();
+            if (!searchText) { alert('请输入商品名称'); return; }
+            
+            const data = await api(`/api/compare/alternative?product_name=${encodeURIComponent(searchText)}`);
+            const resultDiv = document.getElementById('alternativeResult');
+            
+            if (data.error) {
+                resultDiv.innerHTML = `<div class="alert alert-danger">${data.error}</div>`;
+                return;
+            }
+            
+            if (!data.alternatives || data.alternatives.length === 0) {
+                resultDiv.innerHTML = `
+                    <div class="alert alert-info">
+                        ⚠️ 未找到「${escapeHtml(data.source_product.name)}」的替代品<br>
+                        <small>💡 提示：可以添加更多同类商品</small>
+                    </div>
+                `;
+                return;
+            }
+            
+            let alternativesHtml = data.alternatives.map((alt, i) => `
+                <tr ${i === 0 ? 'style="background:#d4edda;"' : ''}>
+                    <td>${i+1} ${i === 0 ? '⭐' : ''}</td>
+                    <td><strong>${escapeHtml(alt.name)}</strong> <span class="badge badge-info" style="font-size:10px;">${escapeHtml(alt.unit || '个')}</span></td>
+                    <td><span style="font-weight:bold;color:${i === 0 ? '#28a745' : '#333'};font-size:16px;">¥${alt.current_price}</span></td>
+                    <td>${escapeHtml(alt.store)}</td>
+                    <td>
+                        ${data.source_product.current_price ? `
+                            <span class="badge ${alt.current_price < data.source_product.current_price ? 'badge-success' : 'badge-danger'}">
+                                ${alt.current_price < data.source_product.current_price ? '⬇ 便宜' : '⬆ 贵'} 
+                                ¥${Math.abs(alt.current_price - data.source_product.current_price).toFixed(2)}
+                            </span>
+                        ` : '-'}
+                    </td>
+                    <td style="font-size:12px;color:#666;">${alt.record_time}</td>
+                </tr>
+            `).join('');
+            
+            resultDiv.innerHTML = `
+                <div class="compare-result-card">
+                    <div class="header-row">
+                        <div>
+                            <h4>📌 ${escapeHtml(data.source_product.name)}</h4>
+                            <span class="badge badge-info">${escapeHtml(data.source_product.category || '未分类')}</span>
+                            <span class="badge badge-warning">当前 ¥${data.source_product.current_price || '未知'}</span>
+                        </div>
+                        ${data.recommendation ? `
+                            <div style="text-align:right;">
+                                <span style="color:#28a745;">🔄 最佳替代：${escapeHtml(data.recommendation.best_alternative.name)}</span>
+                                <span style="font-size:20px;font-weight:bold;color:#28a745;margin-left:10px;">¥${data.recommendation.best_alternative.current_price}</span>
+                                <br><small>💰 可节省 ¥${data.recommendation.saving_vs_current}</small>
+                            </div>
+                        ` : ''}
+                    </div>
+                    <div class="stat-row">
+                        <span>📊 ${data.statistics.total_alternatives} 个替代品</span>
+                        <span>💰 价格区间：¥${data.statistics.price_range.min} - ¥${data.statistics.price_range.max}</span>
+                        <span>📈 均价：¥${data.statistics.price_range.avg}</span>
+                        ${data.statistics.potential_savings ? `
+                            <span class="badge badge-success">💰 最高节省 ¥${data.statistics.potential_savings.vs_source}</span>
+                        ` : ''}
+                    </div>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead><tr>
+                                <th>排名</th>
+                                <th>替代品</th>
+                                <th>价格</th>
+                                <th>店铺</th>
+                                <th>对比当前</th>
+                                <th>时间</th>
+                            </tr></thead>
+                            <tbody>${alternativesHtml}</tbody>
+                        </table>
+                    </div>
+                    ${data.recommendation ? `
+                        <div class="conclusion">
+                            💡 <strong>结论：</strong>推荐用 <strong>${escapeHtml(data.recommendation.best_alternative.name)}</strong> 替代「${escapeHtml(data.source_product.name)}」，
+                            仅需 <strong>¥${data.recommendation.best_alternative.current_price}</strong>，
+                            可节省 <strong>¥${data.recommendation.saving_vs_current}</strong>
+                            （比原商品便宜 <strong>${data.statistics.potential_savings?.save_percent || 0}%</strong>）
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+        }
+
+        // ============ 更新/删除价格 ============
+        async function updatePrice(priceId) {
+            const newPrice = prompt('请输入新的价格：');
+            if (newPrice === null) return;
+            const price = parseFloat(newPrice);
+            if (isNaN(price) || price <= 0) { alert('请输入有效价格'); return; }
+            
+            await api(`/api/price/${priceId}`, {
+                method: 'PUT',
+                body: JSON.stringify({ price })
+            });
+            
+            alert('✅ 价格更新成功！');
+            await loadRecentPrices();
+            await loadStats();
+        }
+
+        async function deletePrice(priceId) {
+            if (!confirm('确定要删除这条价格记录吗？')) return;
+            
+            await api(`/api/price/${priceId}`, { method: 'DELETE' });
+            alert('✅ 删除成功！');
+            await loadRecentPrices();
+            await loadStats();
+        }
+
+        // ============ 修改密码相关函数 ============
+        function showChangePassword() {
+            document.getElementById('changePwdModal').classList.remove('hidden');
+            document.getElementById('oldPassword').value = '';
+            document.getElementById('newPassword').value = '';
+            document.getElementById('confirmPassword').value = '';
+            document.getElementById('changePwdError').style.display = 'none';
+            setTimeout(() => document.getElementById('oldPassword').focus(), 100);
+        }
+
+        function closeChangePwdModal() {
+            document.getElementById('changePwdModal').classList.add('hidden');
+        }
+
+        async function doChangePassword() {
+            const oldPassword = document.getElementById('oldPassword').value.trim();
+            const newPassword = document.getElementById('newPassword').value.trim();
+            const confirmPassword = document.getElementById('confirmPassword').value.trim();
+            const errorEl = document.getElementById('changePwdError');
+            
+            errorEl.style.display = 'none';
+            errorEl.textContent = '';
+            
+            if (!oldPassword || !newPassword || !confirmPassword) {
+                errorEl.textContent = '⚠️ 请填写完整信息';
+                errorEl.style.display = 'block';
+                return;
+            }
+            
+            if (newPassword.length < 6) {
+                errorEl.textContent = '⚠️ 新密码长度不能少于6位';
+                errorEl.style.display = 'block';
+                return;
+            }
+            
+            if (newPassword !== confirmPassword) {
+                errorEl.textContent = '⚠️ 两次输入的密码不一致';
+                errorEl.style.display = 'block';
+                return;
+            }
+            
+            if (oldPassword === newPassword) {
+                errorEl.textContent = '⚠️ 新密码不能与原密码相同';
+                errorEl.style.display = 'block';
+                return;
+            }
+            
+            try {
+                const res = await fetch('/api/change-password', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ old_password: oldPassword, new_password: newPassword, confirm_password: confirmPassword })
+                });
+                const data = await res.json();
+                
+                if (data.success) {
+                    alert('✅ 密码修改成功！请重新登录。');
+                    closeChangePwdModal();
+                    await fetch('/api/logout', { method: 'POST' });
+                    window.location.href = '/login';
+                } else {
+                    errorEl.textContent = '❌ ' + data.message;
+                    errorEl.style.display = 'block';
+                }
+            } catch (e) {
+                errorEl.textContent = '❌ 网络错误，请重试';
+                errorEl.style.display = 'block';
+                console.error(e);
+            }
+        }
+
+        // ============ 数据管理相关函数 ============
+        async function refreshBackupList() {
+            const container = document.getElementById('backupList');
+            const statusEl = document.getElementById('backupStatus');
+            statusEl.style.display = 'none';
+            
+            try {
+                const data = await api('/api/backups');
+                if (!data.backups || data.backups.length === 0) {
+                    container.innerHTML = '<div class="alert alert-info">📭 暂无备份文件，点击「创建备份」开始备份</div>';
+                    return;
+                }
+                
+                container.innerHTML = `
+                    <div style="margin-bottom:12px;color:#718096;font-size:13px;">
+                        共 ${data.backups.length} 个备份文件
+                    </div>
+                    ${data.backups.map(b => `
+                        <div class="backup-item">
+                            <div class="info">
+                                <span><strong>${escapeHtml(b.name)}</strong></span>
+                                <span class="size">📦 ${formatFileSize(b.size)}</span>
+                                <span class="time">🕐 ${escapeHtml(b.time)}</span>
+                            </div>
+                            <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                                <button class="btn btn-success btn-sm" onclick="doRestore('${escapeHtml(b.name)}')">↩️ 恢复</button>
+                                <button class="btn btn-danger btn-sm" onclick="doDeleteBackup('${escapeHtml(b.name)}')">🗑️ 删除</button>
+                            </div>
+                        </div>
+                    `).join('')}
+                `;
+            } catch (error) {
+                container.innerHTML = `<div class="alert alert-danger">❌ 加载备份列表失败：${error.message}</div>`;
+            }
+        }
+
+        async function doBackup() {
+            const statusEl = document.getElementById('backupStatus');
+            statusEl.style.display = 'block';
+            statusEl.className = 'alert alert-info';
+            statusEl.textContent = '⏳ 正在备份...';
+            
+            try {
+                const data = await api('/api/backup', { method: 'POST' });
+                if (data.success) {
+                    statusEl.className = 'alert alert-success';
+                    statusEl.textContent = '✅ ' + data.message;
+                    await refreshBackupList();
+                } else {
+                    statusEl.className = 'alert alert-danger';
+                    statusEl.textContent = '❌ ' + data.message;
+                }
+            } catch (error) {
+                statusEl.className = 'alert alert-danger';
+                statusEl.textContent = '❌ 备份失败：' + error.message;
+            }
+        }
+
+        async function doRestore(backupName) {
+            if (!confirm(`⚠️ 确定要从备份「${backupName}」恢复数据吗？\n\n当前数据将被覆盖，此操作不可撤销！`)) return;
+            if (!confirm(`再次确认：恢复操作将覆盖当前所有数据，确定继续？`)) return;
+            
+            const statusEl = document.getElementById('backupStatus');
+            statusEl.style.display = 'block';
+            statusEl.className = 'alert alert-info';
+            statusEl.textContent = '⏳ 正在恢复...';
+            
+            try {
+                const data = await api(`/api/restore/${encodeURIComponent(backupName)}`, { method: 'POST' });
+                if (data.success) {
+                    statusEl.className = 'alert alert-success';
+                    statusEl.textContent = '✅ ' + data.message;
+                    await refreshBackupList();
+                    // 刷新所有数据
+                    await loadProducts();
+                    await loadStats();
+                    await loadRecentPrices();
+                    await loadProductSelects();
+                } else {
+                    statusEl.className = 'alert alert-danger';
+                    statusEl.textContent = '❌ ' + data.message;
+                }
+            } catch (error) {
+                statusEl.className = 'alert alert-danger';
+                statusEl.textContent = '❌ 恢复失败：' + error.message;
+            }
+        }
+
+        async function doDeleteBackup(backupName) {
+            if (!confirm(`确定要删除备份「${backupName}」吗？`)) return;
+            
+            try {
+                const data = await api(`/api/backup/${encodeURIComponent(backupName)}`, { method: 'DELETE' });
+                if (data.success) {
+                    alert('✅ ' + data.message);
+                    await refreshBackupList();
+                } else {
+                    alert('❌ ' + data.message);
+                }
+            } catch (error) {
+                alert('❌ 删除失败：' + error.message);
+            }
+        }
+
+        // 修改密码弹窗回车键支持
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                if (!document.getElementById('changePwdModal').classList.contains('hidden')) {
+                    doChangePassword();
+                    return;
+                }
+                const target = e.target;
+                if (target.id === 'productName') addProduct();
+                else if (target.id === 'priceValue' || target.id === 'priceStore') addPrice();
+                else if (target.id === 'sameProductSelect') compareSameProduct();
+                else if (target.id === 'alternativeSearch') compareAlternative();
+                else if (target.id === 'queryProduct' || target.id === 'queryStore') queryPrices();
+                else if (target.id === 'editProductName' || target.id === 'editProductCategory' || target.id === 'editProductUnit') {
+                    saveEditProduct();
+                }
+            }
+        });
+
+        // ============ 初始化 ============
+        async function init() {
+            console.log('🔍 系统初始化开始...');
+            try {
+                await checkAuth();
+                console.log('✅ 登录状态检查完成');
+                await loadProducts();
+                console.log('✅ 商品列表加载完成');
+                await loadStats();
+                console.log('✅ 统计数据加载完成');
+                await loadRecentPrices();
+                console.log('✅ 最近价格加载完成');
+                await loadProductSelects();
+                console.log('✅ 下拉列表加载完成');
+                setInterval(loadStats, 30000);
+                console.log('🚀 系统初始化完成！');
+            } catch (error) {
+                console.error('❌ 初始化失败:', error);
+            }
+        }
+
+        init();
+    </script>
+</body>
+</html>

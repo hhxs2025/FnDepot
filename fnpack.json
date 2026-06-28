@@ -13,18 +13,18 @@
       "1.0.0": "首发版本"
     }
   },
-  "price-system": {
-    "display_name": "物价系统",
-    "desc": "记录商品价格，智能比价，帮你找到最划算的购买渠道。",
+  "cloud-bijia": {
+    "display_name": "云比价",
+    "desc": "记录商品价格，智能比价，帮你找到最划算的购买渠道或替代品。",
     "labels": "工具,生活效率",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "author": "晦华先生",
     "author_url": "https://github.com/hhxs2025",
-    "bug_report_url": "https://github.com/hhxs2025/price-system/issues",
+    "bug_report_url": "https://github.com/hhxs2025/cloud-bijia/issues",
     "install_type": "存储空间",
     "size": "9.05",
     "history": {
-      "1.0.0": "首发版本"
+      "1.0.1": "更新版本"
     }
   },
   "member-points-management": {
@@ -39,20 +39,6 @@
     "size": "1.88",
     "history": {
       "1.0.0": "首发版本"
-    }
-  },
-  "yunbijia": {
-    "display_name": "云比价",
-    "desc": "记录商品价格，智能比价，帮你找到最划算的购买渠道。",
-    "labels": "工具,生活效率",
-    "version": "1.0.1",
-    "author": "晦华先生",
-    "author_url": "https://github.com/hhxs2025",
-    "bug_report_url": "https://github.com/hhxs2025/yunbijia/issues",
-    "install_type": "存储空间",
-    "size": "9.05",
-    "history": {
-      "1.0.1": "更新版本"
     }
   }
 } 

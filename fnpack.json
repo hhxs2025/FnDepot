@@ -45,14 +45,14 @@
     "display_name": "云资源",
     "desc": "云资源是一款专为飞牛 fnOS 开发的轻量级资源下载站点搭建工具。支持分类、标签、用户权限管理，仅登录用户可下载资源。适用于团队内部文件共享、资料归档、软件分发等场景。",
     "labels": "工具,生活效率",
-    "version": "1.0.0",
+    "version": "1.0.3",
     "author": "晦华先生",
     "author_url": "https://github.com/hhxs2025",
     "bug_report_url": "https://github.com/hhxs2025/cloud-resources/issues",
     "install_type": "存储空间",
-    "size": "9.1",
+    "size": "10.3",
     "history": {
-      "1.0.0": "首发版本"
+      "1.0.3": "更新版本"
     }
   }
 } 

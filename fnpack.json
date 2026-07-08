@@ -54,5 +54,19 @@
     "history": {
       "1.0.3": "更新版本"
     }
+  },
+  "fn-appstores": {
+    "display_name": "FH软仓",
+    "desc": "这是一款专为FNOS而开发的三方应用仓库，基于Gitee同步应用源。",
+    "labels": "工具",
+    "version": "1.0.8",
+    "author": "晦华先生",
+    "author_url": "https://github.com/hhxs2025",
+    "bug_report_url": "https://github.com/hhxs2025/cloud-resources/issues",
+    "install_type": "存储空间",
+    "size": "2",
+    "history": {
+      "1.0.8": "更新版本"
+    }
   }
 } 

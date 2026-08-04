@@ -27,14 +27,14 @@
       "1.0.2": "更新版本"
     }
   },
-  "member-points-management": {
+  "cloud-members": {
     "display_name": "云会员",
     "desc": "M云会员是一款轻量级、开箱即用的会员积分管理工具，支持积分查询、积分调整、会员信息管理及批量导入导出等核心功能。",
     "labels": "工具,生活效率",
     "version": "1.0.0",
     "author": "晦华先生",
     "author_url": "https://github.com/hhxs2025",
-    "bug_report_url": "https://github.com/hhxs2025/member-points-management/issues",
+    "bug_report_url": "https://github.com/hhxs2025/cloud-members/issues",
     "install_type": "存储空间",
     "size": "1.88",
     "history": {

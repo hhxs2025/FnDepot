@@ -177,11 +177,11 @@
       "install_type": "",
       "is_docker": false,
       "releases": {
-        "1.1.0": {
+        "1.2.0": {
           "packages": {
             "all": {
-              "download_url": "https://gitcode.com/hhxs2025/fpk-info-extrator/releases/download/1.1.0/fpk-info-extractor-1.1.0-all.fpk",
-              "size": 7585844
+              "download_url": "https://gitcode.com/hhxs2025/fpk-info-extrator/releases/download/1.2.0/fpk-info-extractor-1.2.0-all.fpk",
+              "size": 7691177
             }
           }
         }

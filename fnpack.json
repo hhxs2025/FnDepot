@@ -116,24 +116,30 @@
         "系统工具"
       ],
       "icon_url": "https://github.com/hhxs2025/FnDepot/raw/main/fn-appstores-client/ICON.PNG",
+      "preview_urls": [
+        "https://f.hhxs2026.top:8888/f/imgs/xuanchuantu1.webp",
+        "https://f.hhxs2026.top:8888/f/imgs/shouye.webp",
+        "https://f.hhxs2026.top:8888/f/imgs/apps.webp",
+        "https://f.hhxs2026.top:8888/f/imgs/developer.web"
+      ],
       "run_as": "root",
       "install_type": "",
       "is_docker": false,
       "releases": {
-        "2.10.0": {
-          "packages": {
-            "all": {
-              "download_url": "https://gitee.com/hhxs2025/fn-appstores-client/releases/download/2.10.0/fn-appstores-client-2.10.0-all.fpk",
-              "size": 21876075
-            }
-          }
-        },
         "2.11.0": {
           "packages": {
             "all": {
               "download_url": "https://gitee.com/hhxs2025/fn-appstores-client/releases/download/2.11.0/fn-appstores-client-2.11.0-all.fpk",
               "size": 21825285,
               "changelog": "<p><b>📖 2.11.0更新点：</b><br><br>1. <b>下载极速切换</b>：外链下载遇死链秒切，不再反复卡进度；<br>2. <b>精准下载统计</b>：下载校验通过后才计数，杜绝虚高；<br>3. <b>图标显示修复</b>：解决部分局域网/HTTPS下的图片裂图问题；<br>4. <b>连接假离线修复</b>：底层适配鉴权风控，不再出现源假离线；<br>5. <b>下载引擎重构</b>：安装时自动获取服务端最新最优线路，移除本地失败记录，不再秒报“所有线路不可用”，连续安装无需刷新。</p>"
+            }
+          }
+        },
+        "2.10.0": {
+          "packages": {
+            "all": {
+              "download_url": "https://gitee.com/hhxs2025/fn-appstores-client/releases/download/2.10.0/fn-appstores-client-2.10.0-all.fpk",
+              "size": 21876075
             }
           }
         }
@@ -156,7 +162,7 @@
         "2.10.2": {
           "packages": {
             "all": {
-              "download_url": "https://github.com/hhxs2025/fn-appstores/raw/master/server-data/apps/fn-appstores-server-2.10.4-all.fpk",
+              "download_url": "https://github.com/hhxs2025/fn-appstores/raw/master/server-data/apps/fn-appstores-server-2.10.2-all.fpk",
               "size": 313773
             }
           }
@@ -177,11 +183,11 @@
       "install_type": "",
       "is_docker": false,
       "releases": {
-        "1.2.0": {
+        "1.1.0": {
           "packages": {
             "all": {
-              "download_url": "https://gitcode.com/hhxs2025/fpk-info-extrator/releases/download/1.2.0/fpk-info-extractor-1.2.0-all.fpk",
-              "size": 7691177
+              "download_url": "https://gitcode.com/hhxs2025/fpk-info-extrator/releases/download/1.1.0/fpk-info-extractor-1.1.0-all.fpk",
+              "size": 7585844
             }
           }
         }
